@@ -11,18 +11,6 @@ from extensions import db
 
 essay_router = Blueprint('essay', __name__)
 
-@essay_router.route('/favico', methods=['GET'])
-def favico():
-    """"""
-    
-    essays = Essay.query.filter_by(
-        display=True
-        ).order_by('ctime desc').limit(3)
-
-    return render_template('/essay/index.html', 
-        essays=essays)
-
-
 @essay_router.route('/', methods=['GET'])
 def index():
     """首页"""
@@ -44,7 +32,8 @@ def types(interfacename=None):
 
     essays = Essay.query.filter_by(
         type_id=tobj.id, 
-        display=True).order_by('ctime desc').all() or []
+        display=True
+        ).order_by('ctime desc').all() or []
 
     return render_template('/essay/types.html',
         essays=essays)
@@ -114,7 +103,7 @@ def essay_comments_add():
     username = request.form.get("username", "")
     comments = request.form.get("comments", "")
     req_ip = request.remote_addr
-
+    
     if essay_id in ("",):
         return jsonify(status=False, msg=u'404')
 
@@ -123,6 +112,6 @@ def essay_comments_add():
     db.session.add(comment)
     db.session.commit()
     
-    return jsonify(status=True)
+    return jsonify(status=True, msg=u'200')
 
 

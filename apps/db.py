@@ -47,7 +47,7 @@ def essay_add():
             db.session.add(essay)
             db.session.commit()
             msg = u'提交成功，作者审核后将会在前台显示。'
-        # return msg
+    
     return render_template('/admin/essay_add.html', 
         types=types,
         msg=msg)
@@ -62,7 +62,7 @@ def allowed_file(filename):
 def essay_pic_upload():
     """图片上传"""
     from werkzeug import secure_filename
-
+    
     if request.method == 'POST':
         f = request.files.get('file', None)
         if f and allowed_file(f.filename):
