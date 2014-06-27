@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}
+	{{ essay.title }}--funcle.cn
+{% endblock %}
+
+{% block content %}
+<div id="content">
+	<div class="post" style="padding-top:10px;">
+		<h2 class="title"><a>{{ essay.title }} </a></h2>
+		{% if essay.is_reprinted %}
+		<div style="margin-top:5px; font-size:1.5em;">
+		<span style="color:red;">[转]</span><a href="{{ essay.reprinted_url }}" target="_blank">{{ essay.reprinted_url }}</a>
+		</div>
+		{% endif %}
+
+		<p class="meta"><span class="date">{{ essay.ctime | time_to_format }}</span><span class="posted">Posted by <a>{{ essay.poster }}</a></span></p>
+		<div style="clear: both;">&nbsp;</div>
+		<div class="entry">
+			{{ essay.content | safe }}
+		</div>
+		<div class="bdsharebuttonbox" style="margin-bottom:3px;">
+			<span style="float:left; display:inline-block;line-height:34px;font-size:1.2em; margin: 6px 6px 3px 0;" >share: </span>
+			<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+			<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+			<a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a>
+			<a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a>
+			<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+			<a href="#" class="bds_more" data-cmd="more"></a>
+			<span style="margin: 6px 6px 3px 0; float:right; line-height:34px; font-size:1.2em; cursor: pointer;" onclick="comments()">Comments({{essay.comment_num}})</span>
+		</div>
+		
+		<script>
+			window._bd_share_config=
+			{"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"24"},"share":{},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"24"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}
+			};
+			with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+		</script>
+	</div>
+	<div style="clear: both;">&nbsp;</div>
+</div>
+{% endblock %}
+
+{% block category %}
+<ul>
+	{% for item in types %}
+	<li><a href="{{ url_for('essay.types', interfacename=item.interfacename) }}" style="text-decoration:none;">{{ item.name }}({{item.essay_nums}})</a></li>
+	{% endfor %}
+</ul>
+{% endblock %}
+
+{% block footjs %}
+<script type="text/javascript">
+function comments(){
+	var url = "{{ url_for('essay.essay_comments', id=essay.id) }}";
+	window.open(url, "_parent");
+}
+</script>
+{% endblock %}

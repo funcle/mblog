@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block css %}
+<style type="text/css">
+.essylist {
+	margin-top: 50px;
+	font-size: 1.2em;
+}
+
+.essylist li{
+	padding: 0 0 0 0;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #eee;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="content">
+	<h3>文章列表</h3>
+	<div class="essylist">
+		{% if essays %}
+			{% for obj in essays %}
+				<li><a href="{{url_for('essay.essay_show', id=obj.id)}}">{{ obj.title }}</a><span style="float:right;font-size:0.8em;">{{obj.poster}}发布于{{obj.ctime | to_timestamp}}</span></li>
+			{% endfor %}
+		{% else %}
+			暂无相关文章.
+		{% endif %}
+	</div>
+	<div style="clear: both;">&nbsp;</div>
+</div>
+{% endblock %}
+
+{% block category %}
+<ul>
+	{% for item in types %}
+	<li><a href="{{ url_for('essay.types', interfacename=item.interfacename) }}" style="text-decoration:none;">{{ item.name }}({{item.essay_nums}})</a></li>
+	{% endfor %}
+</ul>
+{% endblock %}
+

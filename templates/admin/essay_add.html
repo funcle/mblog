@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}add essay{% endblock %}
+
+{% block css %}
+<link href="http://a.tbcdn.cn/s/kissy/1.2.0/editor/theme/cool/editor-pkg-min-datauri.css" rel="stylesheet"/>
+<style type="text/css">
+div span {
+	display: inline-block;
+	width: 35px;
+	height: 20px;
+}
+div span.reprinted {
+	width: 60px;
+}
+
+div span.error{
+	width: 120px;
+	display: none;
+}
+
+div input {
+	width: 150px;
+	height: 20px;
+	font-size: 1.1em;
+}
+
+div select{
+	width: 155px;
+	height: 20px;
+	font-size: 2em;
+	text-align: center;
+}
+
+div input[type=checkbox]{
+	width: 15px;
+	vertical-align: middle;
+}
+
+div input[name=title]{
+	width: 455px;
+	height: 20px;
+	vertical-align: middle;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="content" style="padding:0 0; width: 900px;">
+	<form method="post">
+	{% if msg != "" %}
+		<span style="color:red; width:500px;">{{ msg }}</span>
+	{% endif %}
+	<div>
+		<span>分类:</span>
+		<select name="types" id="types">
+			<option value="0">---请选择---</option>
+			{% for obj in types %}
+			<option value="{{obj.id}}">{{ obj.name }}</option>
+			{% endfor %}
+		</select>
+		<span style="color:red;" class="error">请选择分类.</span>
+	</div>
+
+	<div style="margin-top:10px;">
+		<span>作者:</span>
+	 	<input type='text' name='poster' id='poster' value="funcle">
+	</div>
+
+	<div style="margin-top:10px; width:700px;">
+		<span>标题:</span>
+	 	<input type='text' name='title' id='title'>
+	 	<span style="color:red;" class="error">请填写标题.</span>
+	</div>
+
+	<div style="margin-top:10px;">
+		<span class="reprinted">是否转载:</span>
+	 	<input type='checkbox' name='is_reprinted' id="reprinted">
+	 	<input type='input' name='reprinted_url' placeholder="原文地址" id="reprinted_url" style="display:none; width:500px;" value=''>
+	 	<span style="color:red;" class="error">请填写原文地址.</span>
+	</div>
+
+	<div style="margin-top:10px; vertical-align:top;">
+		<TEXTAREA id="inputcontent" name="content" style="width:895px; height:200px;"></TEXTAREA>
+	</div>
+
+	<div style="margin-top:10px;">
+		<button id="submitbtn">提 交</button>
+	</div>
+	<!-- <div style="clear: both;">&nbsp;</div> -->
+	</form>
+</div>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
+
+{% block footjs %}
+<script src="http://a.tbcdn.cn/s/kissy/1.2.0/??kissy-min.js,uibase-min.js,component-min.js,dd-min.js,overlay-min.js,editor-min.js"></script>
+<script src="http://a.tbcdn.cn/s/kissy/1.2.0/editor/biz/ext/editor-plugin-pkg-min.js"></script>
+<script type="text/javascript">
+KISSY.ready(function (S) {
+    S.use('editor', function () {
+        var KE = KISSY.Editor;
+        var cfg = {
+            attachForm:true,
+            baseZIndex:10000,
+            pluginConfig:{
+                "image":{
+                    upload:{
+                        serverUrl: "{{ url_for('admin.essay_pic_upload') }}",
+                        surfix: "png, jpg, jpeg, gif",
+                        fileInput: "file",
+                        sizeLimit: 1000
+                    }
+                },
+                "resize":{
+                    direction:["y"]
+                }
+            }
+        };
+        var editor = KE("#inputcontent", S.clone(cfg)).use("elementpaths," +
+            "sourcearea,preview," +
+            "font,color,separator," +
+            "list,indent," +
+            "justify,separator,link," +
+            "image," +
+            "smiley,separator,table,resize," +
+            "separator,maximize");
+    });
+});
+</script>
+<script type="text/javascript">
+$(function(){
+	$("#reprinted").click(function(){
+		if($("#reprinted").attr("checked")){
+			$("#reprinted_url").show();
+		}else{
+			$("#reprinted_url").hide();
+			$("#reprinted_url").siblings('span.error').hide();
+		}
+	});
+
+	$("#submitbtn").click(function(){
+		var types = $("#types");
+		var title = $("#title");
+		var reprinted_url = $("#reprinted_url");
+		if(types.val()=='0'){
+			types.siblings("span").show();
+			return false;
+		}else{
+			types.siblings("span.error").hide();
+		}
+
+		if($.trim(title.val()) == ""){
+			title.siblings('span').show();
+			return false;
+		}else{
+			title.siblings("span.error").hide();
+		}
+
+		if($("#reprinted").is(":checked")){
+			if($.trim(reprinted_url.val()) == "" ){
+				reprinted_url.siblings("span").show();
+				return false;
+			}else{
+				reprinted_url.siblings("span").hide();
+			}
+		}else{
+			reprinted_url.siblings("span.error").hide();
+		}
+		if(confirm("提交后不能修改，确认提交？")){
+			$("form").submit();
+		}else{
+			return false;
+		}
+	})
+})
+</script>
+{% endblock %}

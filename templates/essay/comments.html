@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block css %}
+<style type="text/css">
+div#newcomment {
+	border-top: 1px solid #eee;
+	padding-top: 10px;
+	font-size: 1.2em;
+}
+
+div#newcomment textarea {
+	font-size: 1em;
+}
+
+div#newcomment input {
+	font-size: 1em;
+}
+
+div input[type="button"]{
+	font-size: 1.2em;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="content">
+	<div>
+		<h3 style="color: #666;">评论:{{ essay.title }}</h3>
+		{% if comments %}
+			{% for obj in comments %}
+			<div {% if loop.index%2 == 0%}class=os{%endif%} style="margin-top:10px;margin-bottom:-5px;">
+				<p style="border-bottom: 1px solid #eee; margin-bottom:3px;">{{ loop.index }}楼  {{obj.username}} <span style="float:right;">发表于:{{obj.ctime | to_timestamp}}</span></p>
+				<p style="text-indent:10px;">{{ obj.comment }}</p>
+			</div>
+			{% endfor %}
+		{% else %}
+			<div style="margin:20px 0 0 1px; font-size:1.1em;">暂无评论..</div>
+		{% endif %}
+	</div>
+	<div style="clear: both;">&nbsp;</div>
+	<div id="newcomment">
+		<p>我要评论:</p>
+		<input type="text" name='username' placeholder="用户名" id="username"><span style="color:red;display:none;" class="username">请输入用户名</span>
+		<textarea cols="57" rows="9" placeholder="请不要发表违反国家法律法规及相关政策的言论，违者后果自负。" id="comments"></textarea>
+		<span style="color:red; display:none;" class="comments">请输入评论内容</span>
+	</div>
+	<div>
+		<input type="button" value="提交" id="submitbtn">
+	</div>
+</div>
+{% endblock %}
+
+{% block category %}
+<ul>
+	{% for item in types %}
+	<li><a href="{{ url_for('essay.types', interfacename=item.interfacename) }}" style="text-decoration:none;">{{ item.name }}({{item.essay_nums}})</a></li>
+	{% endfor %}
+</ul>
+{% endblock %}
+
+{% block footjs %}
+<script type="text/javascript">
+$("#submitbtn").click(function(){
+
+	var flag = true;
+	var essay_id = "{{ essay.id }}";
+	var username = $("#username");
+	var comments = $("#comments");
+	if($.trim(username.val()) == ""){
+		username.siblings("span.username").show();
+		flag = false;
+	}else{
+		username.siblings("span.username").hide();
+	}
+	if($.trim(comments.val()) == ""){
+		comments.siblings("span.comments").show();
+		flag = false;
+	}else{
+		comments.siblings("span.comments").hide();
+	}
+	if(flag){
+		$.ajax({
+			type: "post",
+			url: "{{ url_for('essay.essay_comments_add') }}",
+			data: {username: username.val(), essay_id:essay_id, comments:comments.val()},
+			dataType: "json",
+			success: function(txt){
+				if(txt.status){
+					window.location.reload();
+				}else{
+					alert(txt.msg);
+				}
+				
+			},
+			error: function(txt){
+				alert("网络错误，请稍后再试。")
+			}
+		})
+	}
+	return;
+})
+</script>
+{% endblock %}
