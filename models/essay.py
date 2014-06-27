@@ -10,15 +10,18 @@ from extensions import db
 class Type(db.Model):
     """文章分类"""
     __tablename__ = "essay_type"
-
+    
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     rank = db.Column(db.Integer, nullable=False)
     name = db.Column(db.String(20), nullable=False)
     interfacename = db.Column(db.String(10))
-
+    
     @property
     def essay_nums(self):
-        return Essay.query.filter_by(type_id=self.id, display=True).count() or 0
+        return Essay.query.filter_by(
+            type_id=self.id, 
+            display=True
+            ).count() or 0
 
 
 class Essay(db.Model):
@@ -50,7 +53,9 @@ class Essay(db.Model):
 
     @property
     def comment_num(self):
-        return Comment.query.filter_by(essay_id=self.id).count()
+        return Comment.query.filter_by(
+            essay_id=self.id
+            ).count()
         
 class Comment(db.Model):
     '''文章评论'''
@@ -59,10 +64,12 @@ class Comment(db.Model):
     
     id = db.Column(db.Integer, autoincrement=True, 
         primary_key=True)
-    essay_id = db.Column(db.Integer, db.ForeignKey('essay_essay.id'))
+    essay_id = db.Column(db.Integer, 
+        db.ForeignKey('essay_essay.id'))
     username = db.Column(db.String(20))
     comment = db.Column(db.String(500))
-    ctime = db.Column(db.DateTime, default=datetime.datetime.now)
+    ctime = db.Column(db.DateTime, 
+        default=datetime.datetime.now)
     req_ip = db.Column(db.String(20), default="")
     up_num = db.Column(db.Integer, default=0)
     low_num = db.Column(db.Integer, default=0)
