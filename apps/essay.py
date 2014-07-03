@@ -8,10 +8,12 @@ from flask import render_template, Blueprint, request, jsonify
 
 from models.essay import Essay, Type, Comment
 from extensions import db
+from decorator import db_commit
 
 essay_router = Blueprint('essay', __name__)
 
 @essay_router.route('/', methods=['GET'])
+@db_commit
 def index():
     """首页"""
     
@@ -23,23 +25,27 @@ def index():
         essays=essays)
 
 @essay_router.route('/<interfacename>/', methods=['GET'])
+@db_commit
 def types(interfacename=None):
     """根据类别显示出文章列表"""
 
-    tobj = Type.query.filter_by(interfacename=interfacename).first()
+    tobj = Type.query.filter_by(
+        interfacename=interfacename
+        ).first()
     if not tobj:
         return u'<h1>404</h1>'
 
     essays = Essay.query.filter_by(
         type_id=tobj.id, 
         display=True
-        ).order_by('ctime desc').all() or []
+        ).order_by('ctime desc').all()
 
     return render_template('/essay/types.html',
         essays=essays)
 
 
 @essay_router.route('/time-<ym>/', methods=['GET'])
+@db_commit
 def display_ym(ym=None):
     """根据年月显示出该月的文章列表"""
 
@@ -67,10 +73,14 @@ def display_ym(ym=None):
 
 
 @essay_router.route('/essay_<id>/', methods=['GET'])
+@db_commit
 def essay_show(id):
     """文章显示"""
 
-    essay = Essay.query.filter_by(id=id, display=True).first()
+    essay = Essay.query.filter_by(
+        id=id, 
+        display=True
+        ).first()
     if not essay:
         return u'<h1>404</h1>'
 
@@ -79,6 +89,7 @@ def essay_show(id):
 
 
 @essay_router.route('/comments_<id>/', methods=['GET'])
+@db_commit
 def essay_comments(id):
     """文章评论"""
 
@@ -96,6 +107,7 @@ def essay_comments(id):
 
 
 @essay_router.route('/comments/add', methods=['POST'])
+@db_commit
 def essay_comments_add():
     """提交文章评论"""
 
