@@ -20,11 +20,9 @@ def init_app(app, config, urls):
 
     return app
 
-
 def configure_extensions(app):
     '''configure extensions'''
     db.init_app(app)
-
 
 def configure_blueprints(app, urls):
     
@@ -55,11 +53,11 @@ def configure_template_filters(app):
     def to_timestamp(value):
         return value.strftime('%Y-%m-%d %H:%M:%S') if value else value
 
-
 def configure_context_processors(app):
 
     @app.context_processor
     def globals_():
+        """有待改进.."""
         from models.essay import Essay, Type
         
         essays = Essay.query.filter_by(display=True).all()

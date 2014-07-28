@@ -13,7 +13,6 @@ admin_router = Blueprint('admin', __name__)
 
 @admin_router.route('')
 def index():
-    ''''''
     return "@admin"
 
 @admin_router.route('/essay/add', methods=["POST", "GET"])
@@ -78,7 +77,7 @@ def essay_pic_upload():
                 str(filename).split('.')[-1]))
             save_path_name = os.path.join(save_path, filename)
             f.save(save_path_name)
-            url = "http://" + request.host + url_for('essay.index') + save_path_name
+            # url = "http://" + request.host + url_for('essay.index') + save_path_name
             
-            return jsonify(imgUrl=url)
+            return jsonify(imgUrl=save_path_name)
     return jsonify(error='上传错误.')

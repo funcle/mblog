@@ -66,7 +66,7 @@ def display_ym(ym=None):
         cast(Essay.ctime, Date)<=end
         ).filter_by(
         display=True
-        ).order_by('ctime desc').all() or []
+        ).order_by('ctime desc').all()
 
     return render_template('/essay/types.html',
         essays=essays)

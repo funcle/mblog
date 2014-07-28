@@ -21,8 +21,7 @@ class Type(db.Model):
         return Essay.query.filter_by(
             type_id=self.id, 
             display=True
-            ).count() or 0
-
+            ).count()
 
 class Essay(db.Model):
     '''文章

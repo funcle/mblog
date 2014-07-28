@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from functools import wraps
-
 from extensions import db
 
 def db_commit(f):
-    @wraps(f)
+    @functools.wraps(f)
     def decorated_func(*args, **kws):
         try:
             result = f(*args, **kws)
