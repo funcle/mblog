@@ -44,7 +44,7 @@ def types(interfacename=None):
         essays=essays)
 
 
-@essay_router.route('/time-<ym>/', methods=['GET'])
+@essay_router.route('/time/<ym>/', methods=['GET'])
 @db_commit
 def display_ym(ym=None):
     """根据年月显示出该月的文章列表"""
@@ -72,7 +72,7 @@ def display_ym(ym=None):
         essays=essays)
 
 
-@essay_router.route('/essay_<id>/', methods=['GET'])
+@essay_router.route('/essay/<id>/', methods=['GET'])
 @db_commit
 def essay_show(id):
     """文章显示"""
@@ -88,7 +88,7 @@ def essay_show(id):
         essay=essay)
 
 
-@essay_router.route('/comments_<id>/', methods=['GET'])
+@essay_router.route('/comments/<id>/', methods=['GET'])
 @db_commit
 def essay_comments(id):
     """文章评论"""
