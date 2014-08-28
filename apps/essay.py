@@ -93,10 +93,8 @@ def essay_show(id):
 def essay_comments(id):
     """文章评论"""
 
-    essay = Essay.query.get(id)
-    if not essay:
-        return u'<h1>404</h1>'
-
+    essay = Essay.query.get_or_404(id)
+    
     comments = Comment.query.filter_by(
         essay_id=id
         ).order_by('ctime desc').all()
