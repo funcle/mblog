@@ -12,7 +12,7 @@ from decorator import db_commit
 
 essay_router = Blueprint('essay', __name__)
 
-@essay_router.route('/', methods=['GET'])
+@essay_router.route('/')
 @db_commit
 def index():
     """首页"""
@@ -24,7 +24,7 @@ def index():
     return render_template('/essay/index.html', 
         essays=essays)
 
-@essay_router.route('/<interfacename>/', methods=['GET'])
+@essay_router.route('/<interfacename>/')
 @db_commit
 def types(interfacename=None):
     """根据类别显示出文章列表"""
@@ -44,7 +44,7 @@ def types(interfacename=None):
         essays=essays)
 
 
-@essay_router.route('/time/<ym>/', methods=['GET'])
+@essay_router.route('/time/<ym>/')
 @db_commit
 def display_ym(ym=None):
     """根据年月显示出该月的文章列表"""
@@ -72,7 +72,7 @@ def display_ym(ym=None):
         essays=essays)
 
 
-@essay_router.route('/essay/<id>/', methods=['GET'])
+@essay_router.route('/essay/<id>/')
 @db_commit
 def essay_show(id):
     """文章显示"""
@@ -88,13 +88,13 @@ def essay_show(id):
         essay=essay)
 
 
-@essay_router.route('/comments/<id>/', methods=['GET'])
+@essay_router.route('/comments/<id>/')
 @db_commit
 def essay_comments(id):
     """文章评论"""
 
     essay = Essay.query.get_or_404(id)
-    
+
     comments = Comment.query.filter_by(
         essay_id=id
         ).order_by('ctime desc').all()
