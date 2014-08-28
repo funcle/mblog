@@ -55,7 +55,7 @@ def display_ym(ym=None):
 
     year, month = ym.split('-')
     current_year = datetime.date.today().year
-    if not 1970<=int(year)<=current_year or not 0<int(month)<13:
+    if not 1970 <= int(year) <= current_year or not 0 < int(month) < 13:
         return u"404"
 
     start = datetime.date(int(year), int(month), 1)
